@@ -1,0 +1,12 @@
+public class TestDoc {
+  public static void main(String[] args) {
+    int x = 5, y = 8;
+        for (; x < y; x++) {
+           if (y % 2 == 0) {
+              y = y / 2;
+            } else {
+              y = 3 * y + 1;
+            }
+       }
+    }
+  }
