@@ -1,0 +1,132 @@
+class Parser:
+    def __init_(self, tokens):
+        self.tokens = tokens
+        self.index = 0
+
+    def parse(self):
+        self.stmt_list()
+    
+    def match(self, token):
+        if self.current >= len(self.tokens):
+            return False
+        if self.tokens[self.current].type == token:
+            self.current += 1
+            return True
+        return False
+    
+    def stmt_list(self):
+        while self.stmt():
+            if not self.match(';'):
+                return False
+        return True
+    
+    def stmt(self):
+        return self.if_stmt() or self.block() or self.while_loop()
+    
+    def while_loop(self):
+        if not self.match('while'):
+            return False
+        if not self.match('('):
+            return False
+        if not self.bool_expr():
+            return False
+        if not self.match(')'):
+            return False
+        if not self.block():
+            return False
+        return True
+    
+    def if_stmt(self):
+        if not self.match('if'):
+            return False
+        if not self.match('('):
+            return False
+        if not self.bool_expr():
+            return False
+        if not self.match(')'):
+            return False
+        if not self.block():
+            return False
+        if self.match('else'):
+            if not self.block():
+                return False
+        return True
+    
+    def block(self):
+        if not self.match('{'):
+            return False
+        if not self.stmt_list():
+            return False
+        if not self.match('}'):
+            return False
+        return True
+
+    def declare(self):
+        if not self.match('Datatype'):
+            return False
+        if not self.match('ID'):
+            return False
+        while self.match(','):
+            if not self.match('ID'):
+                return False
+        return True
+
+    def assign(self):
+        if not self.match('ID'):
+            return False
+        if not self.match('='):
+            return False
+        if not self.expr():
+            return False
+        return True
+
+    def expr(self):
+        if not self.term():
+            return False
+        while self.match('+') or self.match('-'):
+            if not self.term():
+                return False
+        return True
+
+    def term(self):
+        if not self.fact():
+            return False
+        while self.match('*') or self.match('/') or self.match('%'):
+            if not self.fact():
+                return False
+        return True
+
+    def fact(self):
+        if self.match('ID') or self.match('INT_LIT') or self.match('FLOAT_LIT'):
+            return True
+        if self.match('('):
+            if not self.expr():
+                return False
+            if not self.match(')'):
+                return False
+            return True
+        return False
+
+    def bool_expr(self):
+        if not self.bterm():
+            return False
+        while self.match('>') or self.match('<') or self.match('>=') or self.match('<='):
+            if not self.bterm():
+                return False
+        return True
+
+    def bterm(self):
+        if self.band():
+            while self.match('+=') or self.match('!='):
+                if not self.band():
+                    return False
+            return True
+        return False 
+
+    def band(self):
+        if self.bor():
+            while self.match('&&'):
+                if not self.bor():
+                    return False
+            return True
+        return False
