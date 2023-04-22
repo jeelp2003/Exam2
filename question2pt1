@@ -1,1 +1,12 @@
-
+<STMT> ::= <IF_STMT> | <BLOCK> | <ASSIGN> | <DECLAR> | <WHILE_LOOP>
+<WHILE_LOOP> ::= "while" "(" <BOOL_EXPR> ")" <BLOCK> 
+<IF_STMT> ::= "IF" "("BOOL_EXPR> ")" <BLOCK> [ `else`  <BLOCK> ]
+<BLOCK> ::= "{" <STMT_LIST> "}"
+<ASSIGN> ::= ID "=" <EXPR>
+<DECLARE> ::= "DataType" ID {"," ID }
+<EXPR> ::= <TERM> {("+"|"-") <TERM>}
+<FACT> ::= ID | INT_LIT | FLOAT_LIT | "(" <EXPR> ")"
+<BOOL_EXPR> ::= <BTERM> {(">"|"<"|">="|"<=") <BTERM>}
+<BTERM> ::= <BAND> {("=="|"!=") <BAND>}
+<BAND> ::= <BOR> {"&&" <BOR>}
+<BOR> ::= <EXPR> {"&&" <EXPR>}
